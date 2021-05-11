@@ -129,8 +129,8 @@ class Net(pl.LightningModule):
         return {"val_loss": avg_loss}
 
 
-if __name__ == "__main__":
-
+def run():
+    
     parser = argparse.ArgumentParser()
     parser.add_argument("--device", default="0", type=str, required=False, help="设置使用哪些显卡，用逗号分割")
     parser.add_argument("--config_path", default="config/model_config.json", type=str, required=False, help="选择模型参数",)
