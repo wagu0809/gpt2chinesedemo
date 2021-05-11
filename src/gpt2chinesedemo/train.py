@@ -129,37 +129,52 @@ class Net(pl.LightningModule):
         return {"val_loss": avg_loss}
 
 
-def run():
-    
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--device", default="0", type=str, required=False, help="设置使用哪些显卡，用逗号分割")
-    parser.add_argument("--config_path", default="config/model_config.json", type=str, required=False, help="选择模型参数",)
-    parser.add_argument("--vocab_path", default="vocab/vocab.txt", type=str, required=False, help="选择词库",)
-    parser.add_argument("--data_path", default="data/train.txt", type=str, required=False, help="原始训练语料",)
-    parser.add_argument("--epochs", default=5, type=int, required=False, help="训练循环")
-    parser.add_argument("--batch_size", default=2, type=int, required=False, help="训练batch size")
-    parser.add_argument("--lr", default=1.5e-4, type=float, required=False, help="学习率")
-    parser.add_argument("--warmup_steps", default=2000, type=int, required=False, help="warm up步数")
-    parser.add_argument("--max_length", default=512, type=int, required=False, help="单条文本最长长度")
-    parser.add_argument("--eval_interval", default=100, type=int, required=False, help="eval 步数")
-    parser.add_argument("--val_examples", default=100, type=int, required=False, help="选择多少验证集样本")
-    parser.add_argument("--t_total", default=100000, type=int, required=False, help="计划训练多少步")
-    parser.add_argument("--log_step", default=1, type=int, required=False, help="多少步汇报一次loss")
-    parser.add_argument("--output_dir", default="model/", type=str, required=False, help="模型输出路径")
-    args = parser.parse_args()
+if __name__ == "__main__":
 
-    val_examples = args.val_examples
-    vocab_path = args.vocab_path
-    max_length = args.max_length
-    batch_size = args.batch_size
-    epochs = args.epochs
-    output_path = args.output_dir
-    eval_interval = args.eval_interval
-    lr = args.lr
-    warmup_steps = args.warmup_steps
-    data_path = args.data_path
-    config_path = args.config_path
-    t_total = args.t_total
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument("--device", default="0", type=str, required=False, help="设置使用哪些显卡，用逗号分割")
+    # parser.add_argument("--config_path", default="config/model_config.json", type=str, required=False, help="选择模型参数",)
+    # parser.add_argument("--vocab_path", default="vocab/vocab.txt", type=str, required=False, help="选择词库",)
+    # parser.add_argument("--data_path", default="data/train.txt", type=str, required=False, help="原始训练语料",)
+    # parser.add_argument("--epochs", default=5, type=int, required=False, help="训练循环")
+    # parser.add_argument("--batch_size", default=2, type=int, required=False, help="训练batch size")
+    # parser.add_argument("--lr", default=1.5e-4, type=float, required=False, help="学习率")
+    # parser.add_argument("--warmup_steps", default=2000, type=int, required=False, help="warm up步数")
+    # parser.add_argument("--max_length", default=512, type=int, required=False, help="单条文本最长长度")
+    # parser.add_argument("--eval_interval", default=100, type=int, required=False, help="eval 步数")
+    # parser.add_argument("--val_examples", default=100, type=int, required=False, help="选择多少验证集样本")
+    # parser.add_argument("--t_total", default=100000, type=int, required=False, help="计划训练多少步")
+    # parser.add_argument("--log_step", default=1, type=int, required=False, help="多少步汇报一次loss")
+    # parser.add_argument("--output_dir", default="model/", type=str, required=False, help="模型输出路径")
+    # args = parser.parse_args()
+    args = {
+        'device': '0',
+        'config_path': 'config/model_config.json',
+        'vocab_path': 'vocab/vocab.txt',
+        'data_path': 'data/train.txt',
+        'epochs': 5,
+        'batch_size': 8,
+        'lr': 1.5e-4,
+        'warmup_steps': 2000,
+        'max_length': 1024,
+        'eval_interval': 100,
+        'val_examples': 100,
+        't_total': 100000,
+        'log_step': 1,
+        'output_dir': 'model/'
+    }
+    val_examples = args['val_examples']
+    vocab_path = args['vocab_path']
+    max_length = args['max_length']
+    batch_size = args['batch_size']
+    epochs = args['epochs']
+    output_path = args['output_dir']
+    eval_interval = args['eval_interval']
+    lr = args['lr']
+    warmup_steps = args['warmup_steps']
+    data_path = args['data_path']
+    config_path = args['config_path']
+    t_total = args['t_total']
 
     checkpoint_callback = ModelCheckpoint(
         dirpath=output_path,
@@ -174,7 +189,7 @@ def run():
         default_root_dir=output_path,
         gradient_clip_val=1,
         max_epochs=epochs,
-        gpus=args.device,
+        gpus=args['device'],
         distributed_backend="dp",
         val_check_interval=eval_interval,
         callbacks=[learning_rate_callback, checkpoint_callback],
